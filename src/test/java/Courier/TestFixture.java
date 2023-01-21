@@ -12,7 +12,6 @@ public class TestFixture {
                 .body(courierData)
                 .when()
                 .post("/api/v1/courier/login");
-        response.then().assertThat().statusCode(202);
         return response;
     }
     public String getCourierId(Response response) {
