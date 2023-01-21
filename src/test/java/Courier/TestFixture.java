@@ -5,14 +5,17 @@ import io.restassured.response.Response;
 import static io.restassured.RestAssured.given;
 
 public class TestFixture {
-    public String getCourierId(String login, String password){
+    public Response loginCourier(String login, String password){
         String courierData = "{\"login\":\""+login+"\",\"password\":\""+password+"\"}";
         Response response = given()
                 .header("Content-type", "application/json")
                 .body(courierData)
                 .when()
                 .post("/api/v1/courier/login");
-        response.then().assertThat().statusCode(200);
+        response.then().assertThat().statusCode(202);
+        return response;
+    }
+    public String getCourierId(Response response) {
         CourierLoginDeserializer courierId = response.body().as(CourierLoginDeserializer.class);
         return courierId.getId();
     }

@@ -25,7 +25,6 @@ public class LoginCourierTest {
     public void loginCourierWithValidDataExpectedStatus200() {
         CourierSerializer courierJsonData = new CourierSerializer("loginCourier", "1234", "loginCourier");
         CourierSerializer courierLoginData = new CourierSerializer("loginCourier", "1234");
-        try {
             testFixture.createNewCourier(courierJsonData);
             Response response = given()
                     .header("Content-type", "application/json")
@@ -34,10 +33,9 @@ public class LoginCourierTest {
                     .post("/api/v1/courier/login");
             response.then().assertThat().statusCode(200);
             MatcherAssert.assertThat(response.as(CourierLoginDeserializer.class).getId(), is(notNullValue()));
-        } finally {
+
             //Delete new courier after test
-            testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(),courierJsonData.getPassword()));
-        }
+            testFixture.deleteCourier(testFixture.getCourierId(response));
     }
     @Test
     @DisplayName("Try to login new courier with invalid data")
@@ -45,7 +43,6 @@ public class LoginCourierTest {
     public void loginCourierWithInvalidLoginExpectedStatus404() {
         CourierSerializer courierJsonData = new CourierSerializer("loginCourier", "1234", "loginCourier");
         CourierSerializer courierLoginData = new CourierSerializer("invalidCourierLogin", "1234");
-        try {
             testFixture.createNewCourier(courierJsonData);
             Response response = given()
                     .header("Content-type", "application/json")
@@ -54,10 +51,10 @@ public class LoginCourierTest {
                     .post("/api/v1/courier/login");
             response.then().assertThat().statusCode(404);
             MatcherAssert.assertThat(response.as(CourierLoginDeserializer.class).getMessage(), equalTo("Учетная запись не найдена"));
-        } finally {
+
             //Delete new courier after test
-            testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(),courierJsonData.getPassword()));
-        }
+            testFixture.deleteCourier(testFixture.getCourierId(response));
+
     }
     @Test
     @DisplayName("Try to login new courier with invalid password")
@@ -65,7 +62,6 @@ public class LoginCourierTest {
     public void loginCourierWithInvalidPasswordExpectedStatus404() {
         CourierSerializer courierJsonData = new CourierSerializer("loginCourier", "1234", "loginCourier");
         CourierSerializer courierLoginData = new CourierSerializer("loginCourier", "4321");
-        try {
             testFixture.createNewCourier(courierJsonData);
             Response response = given()
                     .header("Content-type", "application/json")
@@ -74,10 +70,9 @@ public class LoginCourierTest {
                     .post("/api/v1/courier/login");
             response.then().assertThat().statusCode(404);
             MatcherAssert.assertThat(response.as(CourierLoginDeserializer.class).getMessage(), equalTo("Учетная запись не найдена"));
-        } finally {
+
             //Delete new courier after test
-            testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(),courierJsonData.getPassword()));
-        }
+            testFixture.deleteCourier(testFixture.getCourierId(response));
     }
     @Test
     @DisplayName("Try to login new courier without login")
@@ -85,7 +80,6 @@ public class LoginCourierTest {
     public void loginCourierWithoutLoginExpectedStatus400() {
         CourierSerializer courierJsonData = new CourierSerializer("loginCourier", "1234", "loginCourier");
         CourierSerializer courierLoginData = new CourierSerializer(null, "1234");
-        try {
             testFixture.createNewCourier(courierJsonData);
             Response response = given()
                     .header("Content-type", "application/json")
@@ -94,10 +88,9 @@ public class LoginCourierTest {
                     .post("/api/v1/courier/login");
             response.then().assertThat().statusCode(400);
             MatcherAssert.assertThat(response.as(CourierLoginDeserializer.class).getMessage(), equalTo("Недостаточно данных для входа"));
-        } finally {
+
             //Delete new courier after test
-            testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(),courierJsonData.getPassword()));
-        }
+            testFixture.deleteCourier(testFixture.getCourierId(response));
     }
     @Test
     @DisplayName("Try to login new courier without password")
@@ -105,7 +98,6 @@ public class LoginCourierTest {
     public void loginCourierWithoutPasswordExpectedStatus400() {
         CourierSerializer courierJsonData = new CourierSerializer("loginCourier", "1234", "loginCourier");
         CourierSerializer courierLoginData = new CourierSerializer("loginCourier", null);
-        try {
             testFixture.createNewCourier(courierJsonData);
             Response response = given()
                     .header("Content-type", "application/json")
@@ -114,9 +106,8 @@ public class LoginCourierTest {
                     .post("/api/v1/courier/login");
             response.then().assertThat().statusCode(400);
             MatcherAssert.assertThat(response.as(CourierLoginDeserializer.class).getMessage(), equalTo("Недостаточно данных для входа"));
-        } finally {
+
             //Delete new courier after test
-            testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(),courierJsonData.getPassword()));
-        }
+            testFixture.deleteCourier(testFixture.getCourierId(response));
     }
 }
