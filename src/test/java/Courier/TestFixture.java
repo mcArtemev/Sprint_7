@@ -14,7 +14,8 @@ public class TestFixture {
                 .post("/api/v1/courier/login");
         return response;
     }
-    public String getCourierId(Response response) {
+    public String getCourierId(String login, String password) {
+        Response response = loginCourier(login, password);
         CourierLoginDeserializer courierId = response.body().as(CourierLoginDeserializer.class);
         return courierId.getId();
     }

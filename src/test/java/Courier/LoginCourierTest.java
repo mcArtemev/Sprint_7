@@ -28,10 +28,10 @@ public class LoginCourierTest {
         Response response = testFixture.loginCourier(courierLoginData.getLogin(), courierLoginData.getPassword());
 
         response.then().assertThat().statusCode(200);
-            MatcherAssert.assertThat(response.as(CourierLoginDeserializer.class).getId(), is(notNullValue()));
+        MatcherAssert.assertThat(response.as(CourierLoginDeserializer.class).getId(), is(notNullValue()));
 
-            //Delete new courier after test
-            testFixture.deleteCourier(testFixture.getCourierId(response));
+        //Delete new courier after test
+        testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(), courierJsonData.getPassword()));
     }
     @Test
     @DisplayName("Try to login new courier with invalid data")
@@ -46,8 +46,8 @@ public class LoginCourierTest {
         response.then().assertThat().statusCode(404);
         MatcherAssert.assertThat(response.as(CourierLoginDeserializer.class).getMessage(), equalTo("Учетная запись не найдена"));
 
-            //Delete new courier after test
-        testFixture.deleteCourier(testFixture.getCourierId(response));
+        //Delete new courier after test
+        testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(), courierJsonData.getPassword()));
 
     }
     @Test
@@ -64,7 +64,7 @@ public class LoginCourierTest {
         MatcherAssert.assertThat(response.as(CourierLoginDeserializer.class).getMessage(), equalTo("Учетная запись не найдена"));
 
         //Delete new courier after test
-        testFixture.deleteCourier(testFixture.getCourierId(response));
+        testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(), courierJsonData.getPassword()));
     }
     @Test
     @DisplayName("Try to login new courier without login")
@@ -80,7 +80,7 @@ public class LoginCourierTest {
         MatcherAssert.assertThat(response.as(CourierLoginDeserializer.class).getMessage(), equalTo("Недостаточно данных для входа"));
 
         //Delete new courier after test
-        testFixture.deleteCourier(testFixture.getCourierId(response));
+        testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(), courierJsonData.getPassword()));
     }
     @Test
     @DisplayName("Try to login new courier without password")
@@ -96,6 +96,6 @@ public class LoginCourierTest {
         MatcherAssert.assertThat(response.as(CourierLoginDeserializer.class).getMessage(), equalTo("Недостаточно данных для входа"));
 
         //Delete new courier after test
-        testFixture.deleteCourier(testFixture.getCourierId(response));
+        testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(), courierJsonData.getPassword()));
     }
 }

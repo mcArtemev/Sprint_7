@@ -24,13 +24,13 @@ public class CreateNewCourierTest {
     public void createNewCourierWithValidDataExpectedStatus201() {
         CourierSerializer courierJsonData = new CourierSerializer("newCourier", "1234", "newCourier");
 
-            Response response = testFixture.createNewCourier(courierJsonData);
+        Response response = testFixture.createNewCourier(courierJsonData);
 
-            response.then().assertThat().statusCode(201);
-            MatcherAssert.assertThat(response.as(CourierCreateDeserializer.class).getOk(), equalTo(true));
+        response.then().assertThat().statusCode(201);
+        MatcherAssert.assertThat(response.as(CourierCreateDeserializer.class).getOk(), equalTo(true));
 
-            //Delete new courier after test
-            testFixture.deleteCourier(testFixture.getCourierId(response));
+        //Delete new courier after test
+        testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(), courierJsonData.getPassword()));
     }
     @Test
     @DisplayName("Try to create new courier with existing login")
@@ -38,13 +38,15 @@ public class CreateNewCourierTest {
     public void createNewCourierWithExistingCourierLoginExpectedStatus409() {
         CourierSerializer courierJsonData = new CourierSerializer("dublicateCourier", "1234", "dublicateCourier");
 
-            Response originalResponse = testFixture.createNewCourier(courierJsonData);
+            testFixture.createNewCourier(courierJsonData);
             Response dublicateResponse = testFixture.createNewCourier(courierJsonData);
 
+            dublicateResponse.then().assertThat().statusCode(409);
             MatcherAssert.assertThat(dublicateResponse.as(CourierCreateDeserializer.class).getMessage(), equalTo("Этот логин уже используется"));
 
             //Delete new courier after test
-            testFixture.deleteCourier(testFixture.getCourierId(originalResponse));
+        testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(), courierJsonData.getPassword()));
+        if (dublicateResponse.statusCode()==201) { testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(), courierJsonData.getPassword()));}
     }
     @Test
     @DisplayName("Try to create new courier without login")
@@ -58,7 +60,7 @@ public class CreateNewCourierTest {
             MatcherAssert.assertThat(response.as(CourierCreateDeserializer.class).getMessage(), equalTo("Недостаточно данных для создания учетной записи"));
 
             //Delete new courier after test
-            testFixture.deleteCourier(testFixture.getCourierId(response));
+        if (response.statusCode()==201) { testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(), courierJsonData.getPassword()));}
     }
     @Test
     @DisplayName("Try to create new courier without password")
@@ -72,6 +74,6 @@ public class CreateNewCourierTest {
             MatcherAssert.assertThat(response.as(CourierCreateDeserializer.class).getMessage(), equalTo("Недостаточно данных для создания учетной записи"));
 
             //Delete new courier after test
-            testFixture.deleteCourier(testFixture.getCourierId(response));
+        if (response.statusCode()==201) { testFixture.deleteCourier(testFixture.getCourierId(courierJsonData.getLogin(), courierJsonData.getPassword()));}
     }
 }
