@@ -14,10 +14,13 @@ public class TestFixture {
                 .post("/api/v1/courier/login");
         return response;
     }
-    public String getCourierId(String login, String password) {
-        Response response = loginCourier(login, password);
-        CourierLoginDeserializer courierId = response.body().as(CourierLoginDeserializer.class);
-        return courierId.getId();
+    public String getCourierId(Response response) {
+        if (response.statusCode()==200) {
+            CourierLoginDeserializer courierId = response.body().as(CourierLoginDeserializer.class);
+            return courierId.getId();
+        } else {
+            return null;
+        }
     }
     public void deleteCourier(String courierId){
         given()
