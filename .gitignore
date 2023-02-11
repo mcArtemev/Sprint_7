@@ -1,0 +1,19 @@
+##############################
+## IntelliJ
+##############################
+out/
+.idea/
+.allure/
+.idea_modules/
+*.iml
+*.ipr
+*.iws
+##############################
+## Maven
+##############################
+target/
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
